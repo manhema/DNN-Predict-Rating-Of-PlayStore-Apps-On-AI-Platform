@@ -16,6 +16,6 @@ def build_estimator(config, hidden_units=None):
         # All features except the LABEL
         feature_columns=features,
         hidden_units=hidden_units or [10, 10],
-        n_classes=3,
+        n_classes=2,
     )
     return classifier
