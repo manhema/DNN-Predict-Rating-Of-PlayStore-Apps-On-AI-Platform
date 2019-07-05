@@ -38,7 +38,76 @@ Before we can start with our model, we need to ensure our data is clean and this
    LABELS = ['Low', 'High']
    ```
 
-2.
+2. We then define our featurizer in `./trainer/featurizer.py` where we provide addtion metadata about our features and define the initial ingestion of each feature to be used by your model. And the advantage of this is that tensorflow is also able to handle categorical data where previously we would have to worry and converting our data to be all numerical.
+
+   ```python
+    import tensorflow as tf
+
+    INPUT_COLUMNS = [
+        # Continuous base columns.
+        tf.feature_column.numeric_column('Rating'),
+        tf.feature_column.numeric_column('Reviews'),
+        tf.feature_column.numeric_column('Size'),
+        tf.feature_column.numeric_column('Installs'),
+        tf.feature_column.numeric_column('Price'),
+        # For categorical columns with known values we can provide lists
+        # of values ahead of time.
+
+        # Categorical base columns
+        tf.feature_column.categorical_column_with_vocabulary_list(
+            'Category', ['ART_AND_DESIGN', 'AUTO_AND_VEHICLES', 'BEAUTY', 'BOOKS_AND_REFERENCE', 'BUSINESS',
+            'COMICS', 'COMMUNICATION', 'DATING', 'EDUCATION', 'ENTERTAINMENT', 'EVENTS', 'FINANCE', 'FOOD_AND_DRINK',
+            'HEALTH_AND_FITNESS', 'HOUSE_AND_HOME', 'LIBRARIES_AND_DEMO', 'LIFESTYLE', 'GAME', 'FAMILY', 'MEDICAL',
+            'SOCIAL', 'SHOPPING', 'PHOTOGRAPHY', 'SPORTS', 'TRAVEL_AND_LOCAL', 'TOOLS', 'PERSONALIZATION',
+            'PRODUCTIVITY', 'PARENTING', 'WEATHER', 'VIDEO_PLAYERS', 'NEWS_AND_MAGAZINES', 'MAPS_AND_NAVIGATION']),
+        tf.feature_column.categorical_column_with_vocabulary_list(
+            'Type', ['Free', 'Paid']),
+        tf.feature_column.categorical_column_with_vocabulary_list(
+            'Content_Rating', ['Everyone', 'Teen', 'Everyone 10+', 'Mature 17+', 'Adults only 18+', 'Unrated']),
+        tf.feature_column.categorical_column_with_vocabulary_list(
+            'Android_Ver', ['4.0', '2.0', '5.0', '3.0', '7.0', '1.0', '6.0', '8.0']),
+    ]
+
+    def get_dnn_columns(embedding_size=8):
+        (Rating, Reviews, Size, Installs, Price, Category, Type, Content_Rating, Android_Ver) = INPUT_COLUMNS
+
+        deep_columns = [
+            # Use indicator columns for low dimensional vocabularies
+            tf.feature_column.indicator_column(Type),
+            tf.feature_column.indicator_column(Content_Rating),
+            tf.feature_column.indicator_column(Android_Ver),
+            # Use embedding columns for high dimensional vocabularies
+            tf.feature_column.embedding_column(
+                Category, dimension=embedding_size),
+            Reviews,
+            Size,
+            Installs,
+            Price
+        ]
+
+        return deep_columns
+   ```
+
+3. Here we define our model in `./trainer/model.py` where the fetures we defined in `./trainer/featurizer.py` will be passed to the model for training, using a [canned estimator](https://www.tensorflow.org/api_docs/python/tf/estimator/DNNClassifier).
+
+   ```python
+   import tensorflow as tf
+   from constants import constants
+   import trainer.featurizer as featurizer
+
+    def build_estimator(config, hidden_units=None):
+        features = featurizer.get_dnn_columns()
+        classifier = tf.estimator.DNNClassifier(
+            config=config,
+            # All features except the LABEL
+            feature_columns=features,
+            hidden_units=hidden_units or [10, 10],
+            n_classes=3,
+        )
+        return classifier
+   ```
+
+4. Other file's for decoding the csv files and loading data are pre-defined for you, and the following sections will provide a detailed explanation of how to train our model and deploy it to AI Platform.
 
 ## Setting up and testing your Cloud environment
 
@@ -61,16 +130,16 @@ Complete the following steps to set up a GCP account, activate the AI Platform A
 1. Install virtualenv
    `virtualenv` is a tool to create isolated Python environments. Check if you already have `virtualenv` installed by running `virtualenv --version`.
 
-   ```console
-   pip install --user --upgrade virtualenv
-   ```
+```console
+pip install --user --upgrade virtualenv
+```
 
-   To create an isolated development environment for this guide, create a new virtual environment in virtualenv. For example, the following command activates an environment named `cmle-env`:
+To create an isolated development environment for this guide, create a new virtual environment in virtualenv. For example, the following command activates an environment named `cmle-env`:
 
-   ```console
-   virtualenv cmle-env --python=python2.7
-   source cmle-env/bin/activate
-   ```
+```console
+virtualenv cmle-env --python=python2.7
+source cmle-env/bin/activate
+```
 
 2. For the purposes of this tutorial, run the rest of the commands within your virtual environment.
 
