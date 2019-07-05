@@ -11,5 +11,5 @@ CSV_COLUMN_DEFAULTS = [[''], [''], [0], [0], [0.0], [0], [''], [0.0], [''],
 
 LABEL_COLUMN = 'Rating'
 
-# LABELS = ['Low', 'High']
-LABELS = [0, 1]
+LABELS = ['Low', 'High']
+# LABELS = [0, 1]

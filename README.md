@@ -1,8 +1,8 @@
-# Deep Learning on Google ML Engine _(AI Platform)_
+# Deep Nueral Network to predict the rating of google playstore apps on AI-Platform
 
 This tutorial introduces on how to train deep learning models on Google ML Engine _(now AI Platform)_ which is a tool developed by Google to make it easier to take ML projects from ideation to production.
 
-**Note**: This tutorial is an adaption of the [Getting Started Training Prediction](https://cloud.google.com/ml-engine/docs/tensorflow/getting-started-training-prediction) tutorial.
+**Note**: This tutorial is an utilising [Web scraped data of 10k Play Store apps for analysing the Android market](https://www.kaggle.com/lava18/google-play-store-apps) dataset for training a deep nueral network to predict the rating of an app on AI platform.
 
 #### What is deep learning?
 
@@ -10,9 +10,35 @@ This tutorial introduces on how to train deep learning models on Google ML Engin
 
 #### Overview
 
-The main focus of this tutorial is on how to train a deep learning model on Google's **AI Platform** and less on how to develop a deep learning model & the science behind that.
+The main focus of this tutorial is to give you an end-to-end walkthrough on how to train a deep learning model on Google's **AI Platform**.
 
-In this tutorial we are going to make use of the [Iris flower data set](https://en.wikipedia.org/wiki/Iris_flower_data_set) to train a [deep neural network](https://en.wikipedia.org/wiki/Deep_learning#Deep_neural_networks) and classify different flower species. We are going to use the [DNNClassifier tensorflow estimator](https://www.tensorflow.org/api_docs/python/tf/estimator/DNNClassifier) to train the model and parkage it as an application to be deployed on AI platform.
+We are going to train a [deep neural network](https://en.wikipedia.org/wiki/Deep_learning#Deep_neural_networks) and classify if an app on google playstore will have either a **high** or **low** rating. We are going to use the [DNNClassifier tensorflow estimator](https://www.tensorflow.org/api_docs/python/tf/estimator/DNNClassifier) to train the model and parkage it as an application to be deployed on AI platform.
+
+## Data Preprocessing
+
+Before we can start with our model, we need to ensure our data is clean and this
+[Juypter Notebook](./DNN-Predict-App-Rating-Data-Pre-processing.ipynb) does that by loading the data, cleaning it, normalizing the numerical data and spliting our dataset into two sets, namely the training set & testing set. The clean data is then stored in the `data` folder and the name of the two datasets we will require are in that folder namely: `train.csv` and `test.csv`.
+
+## Writing our Model
+
+1. We first define our constants in `./constants/constants.py` where we define the all columns in our data as is, the default values of the fields, the `LABEL_COLUMN` which is our target and its labels.
+
+   ```python
+   CSV_COLUMNS = [
+       'App', 'Category', 'Rating', 'Reviews', 'Size', 'Installs', 'Type',
+       'Price', 'Content_Rating', 'Genres', 'Last Updated', 'Current Ver',
+       'Android_Ver'
+   ]
+
+   CSV_COLUMN_DEFAULTS = [[''], [''], [0], [0], [0.0], [0], [''], [0.0], [''],
+                         [''], [''], [''], ['']]
+
+   LABEL_COLUMN = 'Rating'
+
+   LABELS = ['Low', 'High']
+   ```
+
+2.
 
 ## Setting up and testing your Cloud environment
 
