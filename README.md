@@ -157,7 +157,7 @@ The relevant data files for training, `train.csv` and `test.csv`, are stored in 
 2. Install dependencies
 
    ```console
-   pip install -r ../requirements.txt
+   pip install -r ./requirements.txt
    ```
 
 #### Run a local training job
@@ -244,10 +244,10 @@ This section shows you how to create a new bucket. You can use an existing bucke
 
 #### Upload the data files to your Cloud Storage bucket.
 
-1. Use `gsutil` to copy the two files to your Cloud Storage bucket.
+1. Use gsutil to copy the two files to your Cloud Storage bucket.
 
    ```console
-   BUCKET_NAME="your_bucket_name"
+   gsutil cp -r data gs://$BUCKET_NAME/data
    ```
 
 2. Set the `TRAIN_DATA` and `EVAL_DATA` variables to point to the files.
@@ -260,7 +260,7 @@ This section shows you how to create a new bucket. You can use an existing bucke
 3. Use `gsutil` again to copy the JSON test file `test.json` to your Cloud Storage bucket.
 
    ```console
-    gsutil cp ../test.json gs://$BUCKET_NAME/data/test.json
+    gsutil cp ./data/test.json gs://$BUCKET_NAME/data/test.json
    ```
 
 4. Set the `TEST_JSON` variable to point to that file.
