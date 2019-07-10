@@ -74,11 +74,11 @@ def train_and_evaluate(args):
                                         max_steps=args.train_steps)
 
     exporter = tf.estimator.FinalExporter(
-        'iris', input_module.SERVING_FUNCTIONS[args.export_format])
+        'playstore_apps', input_module.SERVING_FUNCTIONS[args.export_format])
     eval_spec = tf.estimator.EvalSpec(eval_input,
                                       steps=args.eval_steps,
                                       exporters=[exporter],
-                                      name='iris-eval')
+                                      name='playstore_apps-eval')
 
     run_config = tf.estimator.RunConfig(
         session_config=_get_session_config_from_env_var())
@@ -102,16 +102,16 @@ if __name__ == '__main__':
         '--train-files',
         help='GCS file or local paths to training data',
         nargs='+',
-        default='http://download.tensorflow.org/data/iris_training.csv')
+    )
     PARSER.add_argument(
         '--eval-files',
         help='GCS file or local paths to evaluation data',
         nargs='+',
-        default='http://download.tensorflow.org/data/iris_test.csv')
+    )
     PARSER.add_argument(
         '--job-dir',
         help='GCS location to write checkpoints and export models',
-        default='/tmp/iris-estimator')
+        default='/tmp/playstore_apps-estimator')
     PARSER.add_argument(
         '--num-parallel-calls',
         help=

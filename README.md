@@ -313,7 +313,7 @@ You can monitor the progress of your training job by watching the command-line o
 1. Choose a name for your model; this must start with a letter and contain only letters, numbers, and underscores. For example:
 
    ```console
-   MODEL_NAME=playstore_apps
+   MODEL_NAME=dnn_playstore_apps_review
    ```
 
 2. Create an AI Platform model:
@@ -326,7 +326,7 @@ You can monitor the progress of your training job by watching the command-line o
 3. Select the job output to use. The following sample uses the job named playstore_apps_single_1.
 
    ```console
-   OUTPUT_PATH=gs://$BUCKET_NAME/playstore_apps_single_1
+   OUTPUT_PATH=gs://$BUCKET_NAME/$JOB_NAME
    ```
 
 4. Look up the full path of your exported trained model binaries:
@@ -338,10 +338,8 @@ You can monitor the progress of your training job by watching the command-line o
 5. Find a directory named `$OUTPUT_PATH/export/playstore_apps/<timestamp>` and copy this directory path (without the : at the end) and set the environment variable MODEL_BINARIES to its value. For example:
 
    ```console
-   MODEL_BINARIES=gs://$BUCKET_NAME/census_dist_1/export/playstore_apps/1487877383942/
+   MODEL_BINARIES=gs://$BUCKET_NAME/$JOB_NAME/export/playstore_apps/<timestamp>/
    ```
-
-   Where `$BUCKET_NAME` is your Cloud Storage bucket name, and playstore_apps_single_1 is the output directory.
 
 6. Run the following command to create a version `v1`:
 
