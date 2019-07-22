@@ -1,2 +1,2 @@
-tensorflow>=1.13,<2
-tensorboard>=1.13,<2
+tensorflow>=1.13
+tensorboard>=1.13
