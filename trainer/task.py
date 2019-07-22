@@ -179,7 +179,8 @@ if __name__ == '__main__':
     ARGUMENTS, _ = PARSER.parse_known_args()
 
     # Set python level verbosity
-    tf.logging.set_verbosity(ARGUMENTS.verbosity)
+    # tf.logging.set_verbosity(ARGUMENTS.verbosity)
+    tf.compat.v1.logging.set_verbosity(ARGUMENTS.verbosity)
     # Set C++ Graph Execution level verbosity
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = str(
         tf.logging.__dict__[ARGUMENTS.verbosity] / 10)
